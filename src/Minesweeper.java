@@ -11,31 +11,31 @@ public class Minesweeper extends JFrame {
     private int uncoveredCells;
 
     public Minesweeper() {
-        setTitle("Minesweeper");
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setLayout(new GridLayout(10, 10));
+        setTitle("Minesweeper");//Установка заголовка окна
+        setDefaultCloseOperation(EXIT_ON_CLOSE);//Настройки закрытия окна устанавливаются на "EXITONCLOSE".
+        setLayout(new GridLayout(10, 10));//устанавливает менеджер компоновки сеткой с размерами 10х10
 
-        buttons = new JButton[10][10];
-        mines = new boolean[10][10];
-        surroundingMines = new int[10][10];
-        uncoveredCells = 0;
+        buttons = new JButton[10][10];//создает массив кнопок размером 10х10.
+        mines = new boolean[10][10];//создает массив boolean для хранения информации о минах на поле 10х10
+        surroundingMines = new int[10][10];//создает массив int для хранения информации о количестве окружающих мин для каждой ячейки
+        uncoveredCells = 0;//количество открытых ячеек
 
         for (int i = 0; i < 10; i++) {
             for (int j = 0; j < 10; j++) {
-                buttons[i][j] = new JButton();
-                buttons[i][j].addActionListener(new CellClickListener(i, j));
+                buttons[i][j] = new JButton();//создание новую кнопки и сохранение ее в массив кнопок по координатам i и j.
+                buttons[i][j].addActionListener(new CellClickListener(i, j));//добавление слушателя для реакции на нажатие кнопки
                 add(buttons[i][j]);
             }
         }
 
-        placeMines();
-        countSurroundingMines();
+        placeMines();//вызов метода случайной генерации мин
+        countSurroundingMines();//вызов метода для подсчёта окружающих мин
 
-        pack();
-        setVisible(true);
+        pack();//установка оптимального размера окна
+        setVisible(true);//установка видимости окна
     }
 
-    private void placeMines() {
+    private void placeMines() {//метод генерации мин
         Random random = new Random();
         int placedMines = 0;
         while (placedMines < 10) {
@@ -68,9 +68,9 @@ public class Minesweeper extends JFrame {
     }
 
     private void uncoverCell(int i, int j) {
-        if (mines[i][j]) {
+        if (mines[i][j]) {//проверка условия, если нажата мина, то поражение
             loseGame();
-        } else {
+        } else {//если мина не нажата, проверяет есть ли мины рядом
             buttons[i][j].setText(Integer.toString(surroundingMines[i][j]));
             buttons[i][j].setEnabled(false);
             uncoveredCells++;
@@ -91,7 +91,7 @@ public class Minesweeper extends JFrame {
         if (i > 0 && j > 0 && buttons[i - 1][j - 1].isEnabled()) uncoverCell(
                 i - 1,
                 j - 1
-        );
+        );//если рядом с нажатой кнопкой нет мин, раскрывает сверху, снизу,слева,справа
         if (i < 9 && j < 9 && buttons[i + 1][j + 1].isEnabled()) uncoverCell(
                 i + 1,
                 j + 1
@@ -115,14 +115,16 @@ public class Minesweeper extends JFrame {
         for (int i = 0; i < 10; i++) {
             for (int j = 0; j < 10; j++) {
                 if (mines[i][j]) {
-                    buttons[i][j].setText("*");
+                    ImageIcon icon = new ImageIcon("C:\\Users\\karim\\IdeaProjects\\minesweeper\\src\\1.jpg"); // Путь к изображению
+                    buttons[i][j].setIcon(icon);
                 }
                 buttons[i][j].setEnabled(false);
             }
         }
-        JOptionPane.showMessageDialog(this, "You lost.");
+        JOptionPane.showMessageDialog(this, "Ты проиграл и на твой компьютер установлен майнер.");
         System.exit(0);
     }
+
 
     private class CellClickListener implements ActionListener {
         private final int i;
